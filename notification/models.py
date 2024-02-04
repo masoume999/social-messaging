@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from authentication.models import CustomUser
 from enum import IntEnum
 from datetime import datetime
 from django.db import models
@@ -13,8 +13,8 @@ class Notification(models.Model):
     message_id = models.ForeignKey(Message, on_delete=models.CASCADE)
     chat_id = models.ForeignKey(Chat, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=datetime.now(UTC))
-    members = models.ManyToManyField(User ,related_name='notifications_as_member')
-    read_by = models.ManyToManyField(User, related_name='notifications_as_reader')
+    members = models.ManyToManyField(CustomUser ,related_name='notifications_as_member')
+    read_by = models.ManyToManyField(CustomUser, related_name='notifications_as_reader')
 
     def __str__(self):
         return self.id

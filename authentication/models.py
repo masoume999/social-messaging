@@ -9,4 +9,3 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=30, null=True)
     bio = models.TextField(max_length=200, null=True)
-    

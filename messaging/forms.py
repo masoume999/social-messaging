@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from authentication.models import CustomUser
 from .models import Chat
 
 class CreateChatForm(forms.ModelForm):
@@ -14,7 +14,7 @@ class CreateChatForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super(CreateChatForm, self).__init__(*args, **kwargs)
-        self.fields['members'].queryset = User.objects.exclude(pk=user.pk)
+        self.fields['members'].queryset = CustomUser.objects.exclude(pk=user.pk)
 
         # Add a custom attribute to the members field for type checking in JavaScript
         self.fields['members'].widget.attrs['data-chat-type'] = '1'

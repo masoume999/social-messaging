@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from authentication.models import CustomUser
 from enum import IntEnum
 from datetime import datetime
 from django.db import models
@@ -18,9 +18,9 @@ class Chat(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True)
     name = models.CharField(max_length=30, null=True)
     type = models.IntegerField(choices=CHAT_TYPES, default=1)
-    members = models.ManyToManyField(User)  # Many-to-many relationship with default User model
+    members = models.ManyToManyField(CustomUser)  # Many-to-many relationship with default User model
     created_at = models.DateTimeField(default=datetime.now(UTC))
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='owned_chats')  # Many-to-one relationship with default User model
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name='owned_chats')  # Many-to-one relationship with default User model
 
     def get_chat_name(self, requesting_user=None):
         if self.type in [2, 3] and self.name:
@@ -40,7 +40,7 @@ class Chat(models.Model):
 class Message(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True)
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(default=datetime.now(UTC))
 

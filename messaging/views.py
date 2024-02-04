@@ -2,16 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import datetime
-from django.contrib.auth.models import User
+from authentication.models import CustomUser
 from .forms import CreateChatForm
 from .models import Chat, Message, UTC
 # Create your views here.
 
 @login_required
 def get_chats(request):
-    users = User.objects.filter(is_active=True, is_staff=False).exclude(
+    users = CustomUser.objects.filter(is_active=True, is_staff=False).exclude(
     id=request.user.id).order_by('date_joined')
-    user = get_object_or_404(User, id=request.user.id)
+    user = get_object_or_404(CustomUser, id=request.user.id)
     groups = Chat.objects.filter(members__in=[user], type=3)
     channels = Chat.objects.filter(members__in=[user], type=2)
     return render(request, 'chat_home.html', {'users': users, "groups": groups, "channels": channels})
@@ -23,7 +23,7 @@ def create_channel_group(request):
         if form.is_valid():
             chat = form.save()
             chat.members.add(request.user)
-            user = get_object_or_404(User, id=request.user.id)
+            user = get_object_or_404(CustomUser, id=request.user.id)
             chat.owner = user
             chat.save()
             return redirect('get_messages', chat_id=chat.id)
@@ -36,8 +36,8 @@ def create_channel_group(request):
 def create_dm(request):
     member_id = request.GET.get("id", None)
     if member_id:
-        member = User.objects.get(id=member_id)
-        user = User.objects.get(id=request.user.id)
+        member = CustomUser.objects.get(id=member_id)
+        user = CustomUser.objects.get(id=request.user.id)
             # Check if a chat already exists between user and member
         if Chat.objects.filter(type=1, members__in=[user]).filter(members__in=[member]).exists():
             chat = Chat.objects.filter(type=1, members=user).filter(members=member).first()
@@ -76,7 +76,7 @@ def send_message(request, chat_id):
 def get_messages(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)
     if request.method == 'GET':
-        user = get_object_or_404(User, id=request.user.id)
+        user = get_object_or_404(CustomUser, id=request.user.id)
         chat = get_object_or_404(Chat, id=chat_id)
         messages = Message.objects.filter(chat__id=chat.id).order_by('created_at')
 

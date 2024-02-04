@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Create a New Chat{% endblock %}
+
+{% block content %}
+  <h2>Create a New Chat</h2>
+  {{ form.media }}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+  </form>
+  
+{% endblock %}
+
+<script>
+    // Custom JavaScript to handle the conditional behavior of checkbox
+    document.addEventListener('DOMContentLoaded', function () {
+      var membersField = document.querySelector('[name="members"]');
+      var chatTypeField = document.querySelector('[name="type"]');
+      
+      // Add an event listener to the chatTypeField to handle changes
+      chatTypeField.addEventListener('change', function () {
+        if (chatTypeField.value === '1') {
+          // If the type is 1, limit the checkbox selection to one
+          membersField.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+              var checkedCheckboxes = membersField.querySelectorAll('input[type="checkbox"]:checked');
+              if (checkedCheckboxes.length > 1) {
+                // If more than one checkbox is checked, uncheck the additional ones
+                checkedCheckboxes.forEach(function (checkbox) {
+                  if (checkbox !== event.target) {
+                    checkbox.checked = false;
+                  }
+                });
+              }
+            });
+          });
+        }
+      });
+    });
+  </script>

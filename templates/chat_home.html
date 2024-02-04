@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% if request.user.is_authenticated %}
+    <h3>List of Available Users in the System</h3>
+    <ul>
+      {% for user in users %}
+        <li><a href="{% url 'create_dm' %}?id={{ user.id }}">{{ user.username }} - Joined on {{ user.date_joined }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <h3>Your Channels</h3>
+    {% if channels %}
+      <ul>
+        {% for channel in channels %}
+          <li><a href="/chat/{{ channel.id }}">{{ channel.name }}</a></li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No channels available.</p>
+    {% endif %}
+
+    <h3>Your Groups</h3>
+    {% if groups %}
+      <ul>
+        {% for group in groups %}
+          <li><a href="/chat/{{ group.id }}">{{ group.name }}</a></li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No groups available.</p>
+    {% endif %}
+
+    <div class="bottom-button-container">
+      <button onclick="window.location.href='{% url 'create_channel_group' %}'">Create Group/Channel</button>
+    </div>
+  {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'signup' %}">Signup</a>
+  {% endif %}
+{% endblock %}

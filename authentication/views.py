@@ -6,7 +6,10 @@ from .forms import UserCreationForm, LoginForm
 # Create your views here.
 # Home page
 def index(request):
-    return redirect("chat_home")
+    if request.user.is_authenticated:
+        return redirect("chat_home")
+    else:
+        return redirect('login')
 
 # signup page
 def user_signup(request):

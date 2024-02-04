@@ -7,6 +7,7 @@ from .forms import CreateChatForm
 from .models import Chat, Message, UTC
 # Create your views here.
 
+@login_required
 def get_chats(request):
     users = User.objects.filter(is_active=True, is_staff=False).exclude(
     id=request.user.id).order_by('date_joined')

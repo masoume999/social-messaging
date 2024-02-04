@@ -24,12 +24,14 @@ def user_signup(request):
 
 # login page
 def user_login(request):
+    print("1")
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
+            print(user)
             if user:
                 login(request, user)    
                 return redirect('home')

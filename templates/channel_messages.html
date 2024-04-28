@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat Page{% endblock %}
+
+{% block content %}
+  <p>Chat name: {{ chat_name }}</p>
+
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>
+          <strong>{{ message.sender.username }}</strong> ({{ message.created_at }}):
+          {{ message.content }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No messages available in this chat.</p>
+  {% endif %}
+
+  <form method="post" action="send_message/">
+    {% csrf_token %}
+
+    {% if is_channel and is_owner%}
+    <label for="content">New Message:</label>
+    <input type="text" name="content" required>
+    <button type="submit">Send</button>
+    {% endif %}
+
+
+  </form>
+
+{% endblock %}
